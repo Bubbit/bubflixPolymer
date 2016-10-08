@@ -1,0 +1,67 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<dom-module id="bubflix-search">
+
+  <style is="custom-style">
+    :host {
+      background: white;
+            display: block;
+            padding: 0 16px;display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+
+          -ms-flex-direction: row;
+          -webkit-flex-direction: row;
+          flex-direction: row;-ms-flex-align: center;
+          -webkit-align-items: center;
+          align-items: center;
+          margin-bottom: 5px;
+    }
+
+    .input-panel {
+      width: 100%;
+    }
+
+    .icon {
+      color: #9b9b9b;
+    }
+
+  </style>
+  <template>
+    <iron-ajax id="SendPkg"
+      url="http://localhost:3000/search/movies?s={{search}}"
+      method="GET"
+      headers='{"Content-Type": "application/json"}'
+      on-response="handleResponse">
+    </iron-ajax>
+    <div class="input-panel flex">
+			<!--<iron-icon icon="search" class="icon"></iron-icon>-->
+			<!--<input is="iron-input" id="input" class="flex" placeholder="Enter movie title" bind-value="{{search}}" on-change="change">-->
+
+    <paper-input type="search" noLabelFloat placeholder="Search for movies" results="5" on-change="change" value="{{search}}"></paper-input>
+		</div>
+  </template>
+
+  <script>
+
+      Polymer({
+
+        is: 'bubflix-search',
+
+        change: function() {
+          console.log("SEARCH", this.search);
+          this.$.SendPkg.generateRequest();
+        },
+
+        handleResponse: function(data) {
+          console.log("data", data.detail.response);
+          this.fire('searchResult', data.detail.response);
+        }
+
+        
+      });
+
+    </script>
+</dom-module>

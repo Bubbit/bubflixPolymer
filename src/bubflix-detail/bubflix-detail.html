@@ -1,0 +1,103 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+
+<dom-module id="bubflix-detail">
+
+  <template>
+
+    <style is="custom-style">
+      paper-card.details { @apply(--layout-horizontal); }
+      .details-image {
+        width: 100px;
+        height: 170px;
+        background: url('./donuts.png');
+        background-size: cover;
+      }
+      .details-content {
+        @apply(--layout-flex);
+        float: left;
+      }
+      .details-header { @apply(--paper-font-headline); }
+      .details-name { color: var(--paper-grey-600); margin: 10px 0; }
+      paper-icon-button.rate-icon {
+        --iron-icon-fill-color: white;
+        --iron-icon-stroke-color: var(--paper-grey-600);
+      }
+    </style>
+    <app-route
+        route="{{route}}"
+        pattern="/:id"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <iron-ajax auto
+          url="http://www.omdbapi.com/?i=[[routeData.id]]&plot=full&r=json"
+          handle-as="json"
+          last-response="{{omdbResponse}}"></iron-ajax>
+
+    <iron-ajax auto
+        url="https://yts.ag/api/v2/list_movies.json?query_term=[[routeData.id]]&sort=seeds&limit=5"
+        handle-as="json"
+        last-response="{{yifyResponse}}"></iron-ajax>
+    <style>
+    </style>
+
+    <div class="card">
+      <h1></h1>
+      
+      <paper-card class="details" image="[[omdbResponse.Poster]]">
+        <div class="details-content">
+          <div class="card-content">
+            <div class="details-header">[[omdbResponse.Title]]</div>
+            <div class="details-name">Runtime: [[omdbResponse.Runtime]]</div>
+            <div>[[omdbResponse.Plot]]</div>
+          </div>
+          <div class="card-actions">
+            <paper-icon-button class="details-icon" icon="map:star"></paper-icon-button>
+            <paper-icon-button class="details-icon" icon="star"></paper-icon-button>
+            <paper-icon-button class="details-icon" icon="star"></paper-icon-button>
+            <paper-icon-button class="details-icon" icon="star"></paper-icon-button>
+            <paper-icon-button class="details-icon" icon="star"></paper-icon-button>
+          </div>
+          <h2>Download</h2>
+          <iron-list items="[[yifyResponse.data.movies.0.torrents]]" as="item">
+            <template>
+              <p>[[item.quality]] - [[item.seeds]] - [[item.size]]</p>
+            </template>
+          </iron-list>
+        </div>
+        <div class="details-image"></div>
+      </paper-card>
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'bubflix-detail'
+
+
+
+    });
+
+  </script>
+
+</dom-module>

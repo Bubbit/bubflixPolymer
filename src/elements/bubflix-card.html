@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<dom-module id="bubflix-card">
+
+  <style is="custom-style">
+    #example-sizing-contain {
+      width: 200px;
+      height: 300px;
+      background: #ddd;
+    }
+  </style>
+  <template>
+    <a href$="#/detail/[[data.imdbID]]"><iron-image sizing="cover" id="example-sizing-contain" alt="The Polymer logo." src="[[data.Poster]]"></iron-image></a>
+  </template>
+
+  <script>
+
+      Polymer({
+
+        is: 'bubflix-card',
+
+        properties: {
+          data: {
+            type: Array,
+            value: function () { return []; }
+          }
+        }
+
+      });
+
+    </script>
+</dom-module>
